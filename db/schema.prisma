@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -35,4 +35,31 @@ model Session {
   antiCSRFToken      String?
   publicData         String?
   privateData        String?
+}
+
+model Question {
+  id        Int      @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  text      String
+  choices   Choice[]
+}
+
+model Choice {
+  id         Int      @default(autoincrement()) @id
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  text       String
+  votes      Int      @default(0)
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+}
+
+model Recipe {
+  id          Int      @default(autoincrement()) @id
+  name        String
+  imageUrl    String
+  description String
+  likes       Int
+  addedAt     DateTime @default(now())
 }
